@@ -1,0 +1,24 @@
+#!/bin/bash
+
+while true
+do
+    export DISPSTAT=$(batman-helper wlrdisplay)
+    export OLDSTAT=$(cat /home/droidian/.FP_STAT)
+    echo "$DISPSTAT" > /home/droidian/.FP_STAT
+
+    if [ "$OLDSTAT" != "$DISPSTAT" ]; then
+        if [ "$DISPSTAT" == "yes" ]; then
+            while true
+            do
+                /usr/bin/droidian-fpd-unlocker
+                if [ $? != 0 ]; then
+                   sleep 0.2
+                else
+                   break
+                fi
+            done
+        fi
+    else
+        sleep 1
+    fi
+done
