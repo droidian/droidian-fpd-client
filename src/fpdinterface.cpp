@@ -73,7 +73,7 @@ void FPDInterface::connectDaemon()
         iface->deleteLater();
     }
 
-    iface = new QDBusInterface(QStringLiteral(SERVICE_NAME), QStringLiteral("/org/sailfishos/fingerprint1"), QStringLiteral(SERVICE_NAME), QDBusConnection::systemBus());
+    iface = new QDBusInterface(QStringLiteral(SERVICE_NAME), QStringLiteral("/org/droidian/fingerprint"), QStringLiteral(SERVICE_NAME), QDBusConnection::systemBus());
 
     if (!iface->isValid()) {
         iface->deleteLater();
@@ -145,4 +145,3 @@ QStringList FPDInterface::fingerprints() const
     qWarning() << "DBus reply invalid";
     return QStringList();
 }
-

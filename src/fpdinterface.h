@@ -11,7 +11,7 @@
 #include <QDBusServiceWatcher>
 #include <QStringList>
 
-#define SERVICE_NAME "org.sailfishos.fingerprint1"
+#define SERVICE_NAME "org.droidian.fingerprint"
 
 class FPDInterface : public QObject
 {
