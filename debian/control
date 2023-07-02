@@ -8,7 +8,9 @@ Build-Depends: debhelper-compat (= 13),
                qtquickcontrols2-5-dev,
                qtchooser,
                qtbase5-dev-tools,
-               qt5-qmake
+               qt5-qmake,
+               g++,                                  
+               libc6-dev,
 
 Package: droidian-fpd-client
 Architecture: any
