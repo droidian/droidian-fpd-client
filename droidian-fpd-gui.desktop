@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Fingerprints
+GenericName=Droidian Fingerprint
+Comment=Droidian fingerprint management
+Icon=/usr/share/icons/droidian-fingerprint.png
+Exec=droidian-fpd-gui
+Terminal=false
+Categories=System
+Keywords=system;process;task

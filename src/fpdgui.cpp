@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<FPDInterfaceQmlAdapter>("org.droidian.fingerprint", 1, 0, "FPDInterface");
 
     QQmlApplicationEngine engine;
-    engine.load(QUrl(QStringLiteral("qml/main.qml")));
+    engine.load(QUrl(QStringLiteral("/usr/lib/droidian-fingerprint/main.qml")));
     if (engine.rootObjects().isEmpty())
         return -1;
 
