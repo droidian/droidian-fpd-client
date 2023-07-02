@@ -1,0 +1,17 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+	qmake droidian-fpd-client.pro
+	make
+	make clean
+
+	qmake droidian-fpd-unlocker.pro
+	make
+	make clean
+
+	qmake droidian-fpd-gui.pro
+	make
+	make clean

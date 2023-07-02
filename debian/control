@@ -1,0 +1,24 @@
+Source: droidian-fpd-client
+Section: misc
+Priority: optional
+Maintainer: Bardia Moshiri <fakeshell@bardia.tech>
+Build-Depends: debhelper-compat (= 13),
+               qtbase5-gles-dev,
+               qtdeclarative5-dev,
+               qtquickcontrols2-5-dev,
+               qtchooser,
+               qtbase5-dev-tools,
+               qt5-qmake
+
+Package: droidian-fpd-client
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, 
+         libqt5core5a,
+         libqt5gui5-gles,
+         libqt5dbus5,
+         libqt5qml5,
+         libqt5quick5-gles,
+         libqt5dbus5,
+         libqt5quickcontrols2-5
+Description: Droidian fingerprint client
+  Droidian fingerprint enrollment and client.

@@ -1,0 +1,10 @@
+droidian-fpd-client (0.0.0+git20230702193104.5e8e3e3.release) trixie; urgency=medium
+
+  * first commit
+  * listen on org.droidian.fingerprint
+  * add droidian-fpd-unlocker
+  * initial implementation of droidian-fpd-gui
+  * add desktop file and fingerprint icon
+
+ -- Bardia Moshiri <fakeshell@bardia.tech>  Sun, 02 Jul 2023 19:31:04 +0000
+
