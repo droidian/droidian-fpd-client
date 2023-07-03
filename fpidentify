@@ -1,5 +1,16 @@
 #!/bin/bash
 
+SESSIONID=$(loginctl list-sessions | awk '/tty7/{print $1}')
+
+while trues
+do
+    SESSIONID=$(loginctl list-sessions | awk '/tty7/{print $1}')
+    if [ ! -z $SESSIONID ]; then
+       break
+    fi
+    sleep 1
+done
+
 while true
 do
     export DISPSTAT=$(batman-helper wlrdisplay)
@@ -10,7 +21,7 @@ do
         if [ "$DISPSTAT" == "yes" ]; then
             while true
             do
-                /usr/bin/droidian-fpd-unlocker
+                /usr/bin/droidian-fpd-unlocker $SESSIONID
                 if [ $? != 0 ]; then
                    sleep 0.2
                 else

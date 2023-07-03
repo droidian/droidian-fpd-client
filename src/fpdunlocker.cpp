@@ -4,20 +4,29 @@
 #include <QCoreApplication>
 #include <QTextStream>
 #include <QDebug>
-#include <QProcess> // Include QProcess
+#include <QProcess>
 #include "fpdinterface.h"
 
 int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
 
+    QStringList args = QCoreApplication::arguments();
+
+    if(args.count() != 2) {
+        qCritical() << "Invalid number of arguments. Usage: droidian-fpd-unlocker <session_id>";
+        return 1;
+    }
+
+    QString sessionId = args[1];
+
     FPDInterface fpdInterface;
 
-    QObject::connect(&fpdInterface, &FPDInterface::identified, [](const QString &finger) {
+    QObject::connect(&fpdInterface, &FPDInterface::identified, [sessionId](const QString &finger) {
         qDebug() << "Identified finger:" << finger;
 
         QProcess *process = new QProcess();
-        QString command = "loginctl unlock-session $(loginctl list-sessions | awk '/tty7/{print $1}')";
+        QString command = "loginctl unlock-session " + sessionId;
         process->start("bash", QStringList() << "-c" << command);
 
         QObject::connect(process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
