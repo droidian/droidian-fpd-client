@@ -4,10 +4,14 @@
 	dh $@
 
 override_dh_auto_clean:
-	make clean
+	if [ -f Makefile ]; then \
+		make clean; \
+	fi
 
 override_dh_auto_configure:
-	$(MAKE) clean
+	if [ -f Makefile ]; then \
+		$(MAKE) clean; \
+	fi
 
 	qmake droidian-fpd-client.pro
 	$(MAKE)
