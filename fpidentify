@@ -1,5 +1,7 @@
 #!/bin/bash
 
+/usr/bin/binder-wait android.hardware.biometrics.fingerprint@2.1::IBiometricsFingerprint/default
+
 SESSIONID=$(loginctl list-sessions | awk '/tty7/{print $1}')
 
 while trues
