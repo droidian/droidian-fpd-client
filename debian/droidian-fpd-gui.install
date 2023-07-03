@@ -1,0 +1,4 @@
+droidian-fpd-gui usr/bin
+droidian-fpd-gui.desktop usr/share/applications
+droidian-fingerprint.png usr/share/icons
+qml/main.qml usr/lib/droidian-fingerprint/

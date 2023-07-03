@@ -1,10 +1,38 @@
-droidian-fpd-client (0.0.0+git20230702193104.5e8e3e3.release) trixie; urgency=medium
+droidian-fpd-client (5+git20230703160134.d09de20.release) trixie; urgency=medium
+
+  * bind to the correct session id on startup
+
+ -- Bardia Moshiri <fakeshell@bardia.tech>  Mon, 03 Jul 2023 16:01:34 -0400
+
+droidian-fpd-client (4) trixie; urgency=medium
+
+  * unlocker: detect the session name before unlocking
+
+ -- Bardia Moshiri <fakeshell@bardia.tech>  Sun, 02 Jul 2023 19:47:31 -0400
+
+droidian-fpd-client (3) trixie; urgency=medium
+
+  * debian: install fpidentify to /usr/bin
+
+ -- Bardia Moshiri <fakeshell@bardia.tech>  Sun, 02 Jul 2023 19:33:29 -0400
+
+droidian-fpd-client (2) trixie; urgency=medium
+
+  * debian: accept gles variants on install
+
+ -- Bardia Moshiri <fakeshell@bardia.tech>  Sun, 02 Jul 2023 19:21:52 -0400
+
+droidian-fpd-client (1) trixie; urgency=medium
 
   * first commit
   * listen on org.droidian.fingerprint
   * add droidian-fpd-unlocker
   * initial implementation of droidian-fpd-gui
   * add desktop file and fingerprint icon
+  * add debian packaging
+  * debian: add g++ and libc6-dev to build deps
+  * add circleci configs
+  * debian: replace gles packages with non gles variants
 
- -- Bardia Moshiri <fakeshell@bardia.tech>  Sun, 02 Jul 2023 19:31:04 +0000
+ -- Bardia Moshiri <fakeshell@bardia.tech>  Sun, 02 Jul 2023 22:40:31 +0000
 

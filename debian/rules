@@ -3,15 +3,22 @@
 %:
 	dh $@
 
-override_dh_auto_configure:
-	qmake droidian-fpd-client.pro
-	make
+override_dh_auto_clean:
 	make clean
+
+override_dh_auto_configure:
+	$(MAKE) clean
+
+	qmake droidian-fpd-client.pro
+	$(MAKE)
 
 	qmake droidian-fpd-unlocker.pro
-	make
-	make clean
+	$(MAKE)
 
 	qmake droidian-fpd-gui.pro
-	make
-	make clean
+	$(MAKE)
+
+	$(MAKE) clean
+
+override_dh_auto_test:
+override_dh_dwz:

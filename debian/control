@@ -16,11 +16,21 @@ Package: droidian-fpd-client
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, 
          libqt5core5a,
+         libqt5dbus5,
+         libqt5qml5,
+         libqt5dbus5,
+Description: Droidian fingerprint client
+  Droidian fingerprint enrollment and client.
+
+Package: droidian-fpd-gui
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends},
+         libqt5core5a,
          libqt5gui5 | libqt5gui5-gles,
          libqt5dbus5,
          libqt5qml5,
          libqt5quick5 | libqt5quick5-gles,
          libqt5dbus5,
          libqt5quickcontrols2-5
-Description: Droidian fingerprint client
-  Droidian fingerprint enrollment and client.
+Description: Droidian fingerprint gui
+  Droidian fingerprint gui
