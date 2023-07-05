@@ -19,7 +19,7 @@ FPDInterface::FPDInterface(QObject *parent) : QObject(parent),
 
 int FPDInterface::enroll(const QString &finger)
 {
-    qDebug() << Q_FUNC_INFO;
+//    qDebug() << Q_FUNC_INFO;
     if (!iface->isValid()) {
         return -1;
     }
@@ -32,7 +32,7 @@ int FPDInterface::enroll(const QString &finger)
 
 int FPDInterface::identify()
 {
-    qDebug() << Q_FUNC_INFO;
+//    qDebug() << Q_FUNC_INFO;
     if (!iface->isValid()) {
         return -1;
     }
@@ -45,7 +45,7 @@ int FPDInterface::identify()
 
 void FPDInterface::clear()
 {
-    qDebug() << Q_FUNC_INFO;
+//    qDebug() << Q_FUNC_INFO;
     if (!iface->isValid()) {
         return;
     }
@@ -54,7 +54,7 @@ void FPDInterface::clear()
 
 int FPDInterface::remove(const QString &finger)
 {
-    qDebug() << Q_FUNC_INFO;
+//    qDebug() << Q_FUNC_INFO;
     if (!iface->isValid()) {
         return -1;
     }
@@ -67,7 +67,7 @@ int FPDInterface::remove(const QString &finger)
 
 void FPDInterface::connectDaemon()
 {
-    qDebug() << Q_FUNC_INFO;
+//    qDebug() << Q_FUNC_INFO;
 
     if (iface) {
         iface->deleteLater();
@@ -99,7 +99,7 @@ void FPDInterface::connectDaemon()
 
 void FPDInterface::disconnectDaemon()
 {
-    qDebug() << Q_FUNC_INFO;
+//    qDebug() << Q_FUNC_INFO;
 
     m_connected = false;
     connectionStateChanged();
@@ -118,7 +118,7 @@ void FPDInterface::onEnrollProgress(int p)
 
 QString FPDInterface::state() const
 {
-    qDebug() << Q_FUNC_INFO;
+//    qDebug() << Q_FUNC_INFO;
     if (!iface->isValid()) {
         return QStringLiteral("Unknown: DBus interface invalid");
     }
@@ -132,7 +132,7 @@ QString FPDInterface::state() const
 
 QStringList FPDInterface::fingerprints() const
 {
-    qDebug() << Q_FUNC_INFO;
+//    qDebug() << Q_FUNC_INFO;
     if (!iface->isValid()) {
         qWarning() << "DBus interface invalid";
         return QStringList();
