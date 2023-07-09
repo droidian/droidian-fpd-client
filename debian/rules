@@ -22,7 +22,17 @@ override_dh_auto_configure:
 	qmake droidian-fpd-gui.pro
 	$(MAKE)
 
+	qmake droidian-fpd-identify.pro
+	$(MAKE)
+
 	$(MAKE) clean
+
+	gcc -fPIC -shared -o pam_fpd.so pam/pam_fpd.c
+
+override_dh_install:
+	dh_install
+	mkdir -p debian/droidian-fpd-client/usr/lib/$(DEB_HOST_MULTIARCH)/security
+	cp pam_fpd.so debian/droidian-fpd-client/usr/lib/$(DEB_HOST_MULTIARCH)/security
 
 override_dh_auto_test:
 override_dh_dwz:

@@ -1,4 +1,31 @@
-droidian-fpd-client (5+git20230703160134.d09de20.release) trixie; urgency=medium
+droidian-fpd-client (8+git20230709005351.7ac6aba.release) trixie; urgency=medium
+
+  * fpdunlocker: add haptic feedback for good and bad fingerprints
+  * move everything from usr/bin to usr/libexec/fpd
+
+ -- Bardia Moshiri <fakeshell@bardia.tech>  Sun, 09 Jul 2023 00:53:51 -0400
+
+droidian-fpd-client (8) trixie; urgency=medium
+
+  * src: let the client run with arguments and disable logging
+  * debian: add qml-module-qtquick-controls2 and qml-module-qtquick-controls to deps of fpd-gui
+
+ -- Bardia Moshiri <fakeshell@bardia.tech>  Thu, 06 Jul 2023 01:43:51 -0400
+
+droidian-fpd-client (7) trixie; urgency=medium
+
+  * debian: only run make clean if a Makefile exists
+  * fpidentify: wait for fingerprint interface to come up before starting
+
+ -- Bardia Moshiri <fakeshell@bardia.tech>  Mon, 03 Jul 2023 17:27:08 -0400
+
+droidian-fpd-client (6) trixie; urgency=medium
+
+  * debian: split the package into gui and client
+
+ -- Bardia Moshiri <fakeshell@bardia.tech>  Mon, 03 Jul 2023 16:42:50 -0400
+
+droidian-fpd-client (5) trixie; urgency=medium
 
   * bind to the correct session id on startup
 

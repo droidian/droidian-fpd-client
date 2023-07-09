@@ -1,4 +1,5 @@
 droidian-fpd-client usr/libexec/fpd
 droidian-fpd-unlocker usr/libexec/fpd
+droidian-fpd-identify usr/libexec/fpd
 droidian-fpd-unlocker.service usr/lib/systemd/user
 fpidentify usr/bin
