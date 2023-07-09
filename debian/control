@@ -11,6 +11,7 @@ Build-Depends: debhelper-compat (= 13),
                qt5-qmake,
                g++,                                  
                libc6-dev,
+               libpam0g-dev,
 
 Package: droidian-fpd-client
 Architecture: any
