@@ -26,7 +26,9 @@ int main(int argc, char *argv[])
         qDebug() << "Identified finger:" << finger;
 
         QProcess *process = new QProcess();
-        QString command = "loginctl unlock-session " + sessionId;
+        QString vibra_good = "fbcli -E bell-terminal";
+        QString unlock = "loginctl unlock-session " + sessionId;
+	QString command = vibra_good + " && " + unlock;
         process->start("bash", QStringList() << "-c" << command);
 
         QObject::connect(process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
@@ -37,6 +39,10 @@ int main(int argc, char *argv[])
 
     QObject::connect(&fpdInterface, &FPDInterface::errorInfo, [](const QString &info) {
         qDebug() << "Error info:" << info;
+        QProcess *process = new QProcess();
+        QString vibra_bad = "for i in {0..2}; do fbcli -E button-pressed; done";
+        process->start("bash", QStringList() << "-c" << vibra_bad);
+
         QCoreApplication::exit(1);
     });
 
