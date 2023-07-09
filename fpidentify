@@ -23,7 +23,7 @@ do
         if [ "$DISPSTAT" == "yes" ]; then
             while true
             do
-                /usr/bin/droidian-fpd-unlocker $SESSIONID
+                /usr/libexec/fpd/droidian-fpd-unlocker $SESSIONID
                 if [ $? != 0 ]; then
                    sleep 0.2
                 else
