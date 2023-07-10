@@ -39,9 +39,12 @@ int main(int argc, char *argv[])
 
     QObject::connect(&fpdInterface, &FPDInterface::errorInfo, [](const QString &info) {
         qDebug() << "Error info:" << info;
-        QProcess *process = new QProcess();
-        QString vibra_bad = "for i in {0..2}; do fbcli -E button-pressed; done";
-        process->start("bash", QStringList() << "-c" << vibra_bad);
+
+        if (info.contains("FINGER_NOT_RECOGNIZED")) {
+            QProcess *process = new QProcess();
+            QString vibra_bad = "for i in {0..2}; do fbcli -E button-pressed; done";
+            process->start("bash", QStringList() << "-c" << vibra_bad);
+        }
 
         QCoreApplication::exit(1);
     });
