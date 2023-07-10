@@ -4,7 +4,7 @@
 
 SESSIONID=$(loginctl list-sessions | awk '/tty7/{print $1}')
 
-while trues
+while true
 do
     SESSIONID=$(loginctl list-sessions | awk '/tty7/{print $1}')
     if [ ! -z $SESSIONID ]; then
@@ -21,13 +21,14 @@ do
 
     if [ "$OLDSTAT" != "$DISPSTAT" ]; then
         if [ "$DISPSTAT" == "yes" ]; then
-            while true
+            UNLOCKED=false
+            while [ "$UNLOCKED" = false ]
             do
                 /usr/libexec/fpd/droidian-fpd-unlocker $SESSIONID
                 if [ $? != 0 ]; then
                    sleep 0.2
                 else
-                   break
+                   UNLOCKED=true
                 fi
             done
         fi
