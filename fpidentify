@@ -4,19 +4,23 @@
 
 SESSIONID=$(loginctl list-sessions | awk '/tty7/{print $1}')
 
+delay() {
+    read -t $1 < /dev/tty0
+}
+
 while true
 do
     SESSIONID=$(loginctl list-sessions | awk '/tty7/{print $1}')
     if [ ! -z $SESSIONID ]; then
        break
     fi
-    sleep 1
+    delay 1
 done
 
 while true
 do
     export DISPSTAT=$(batman-helper wlrdisplay)
-    export OLDSTAT=$(cat /home/droidian/.FP_STAT)
+    export OLDSTAT=$(</home/droidian/.FP_STAT)
     echo "$DISPSTAT" > /home/droidian/.FP_STAT
 
     if [ "$OLDSTAT" != "$DISPSTAT" ]; then
@@ -26,13 +30,13 @@ do
             do
                 /usr/libexec/fpd/droidian-fpd-unlocker $SESSIONID
                 if [ $? != 0 ]; then
-                   sleep 0.2
+                   delay 0.2
                 else
                    UNLOCKED=true
                 fi
             done
         fi
     else
-        sleep 1
+        delay 1
     fi
 done
