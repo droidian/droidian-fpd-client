@@ -25,28 +25,47 @@ int main(int argc, char *argv[])
     QObject::connect(&fpdInterface, &FPDInterface::identified, [sessionId](const QString &finger) {
         qDebug() << "Identified finger:" << finger;
 
-        QProcess *process = new QProcess();
-        QString vibra_good = "fbcli -E bell-terminal";
-        QString unlock = "loginctl unlock-session " + sessionId;
-	QString command = vibra_good + " && " + unlock;
-        process->start("bash", QStringList() << "-c" << command);
+        QProcess checkScreen;
+        checkScreen.start("batman-helper", QStringList() << "wlrdisplay");
+        checkScreen.waitForFinished();
 
-        QObject::connect(process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
-            [&](int exitCode, QProcess::ExitStatus exitStatus) {
-                QCoreApplication::exit(exitCode);
-            });
+        QString batmanOutput(checkScreen.readAllStandardOutput());
+
+        if (batmanOutput.trimmed() == "yes") {
+            QProcess *process = new QProcess();
+            QString vibra_good = "fbcli -E bell-terminal";
+            QString unlock = "loginctl unlock-session " + sessionId;
+            QString command = vibra_good + " && " + unlock;
+            process->start("bash", QStringList() << "-c" << command);
+
+            QObject::connect(process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
+                [&](int exitCode, QProcess::ExitStatus exitStatus) {
+                    QCoreApplication::exit(exitCode);
+                });
+        }
+        else {
+            QCoreApplication::exit(0);
+        }
     });
 
     QObject::connect(&fpdInterface, &FPDInterface::errorInfo, [](const QString &info) {
         qDebug() << "Error info:" << info;
 
-        if (info.contains("FINGER_NOT_RECOGNIZED")) {
+        QProcess checkScreen;
+        checkScreen.start("batman-helper", QStringList() << "wlrdisplay");
+        checkScreen.waitForFinished();
+
+        QString batmanOutput(checkScreen.readAllStandardOutput());
+
+        if (info.contains("FINGER_NOT_RECOGNIZED") && batmanOutput.trimmed() == "yes") {
             QProcess *process = new QProcess();
             QString vibra_bad = "for i in {0..2}; do fbcli -E button-pressed; done";
             process->start("bash", QStringList() << "-c" << vibra_bad);
-        }
 
-        QCoreApplication::exit(1);
+           QCoreApplication::exit(1);
+        } else {
+           QCoreApplication::exit(0);
+        }
     });
 
     qDebug() << "Waiting for finger identification...";
