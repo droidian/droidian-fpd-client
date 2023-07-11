@@ -1,0 +1,2 @@
+auth    requisite       pam_fpd.so
+account required        pam_permit.so
