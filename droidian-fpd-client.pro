@@ -2,7 +2,8 @@ TARGET = droidian-fpd-client
 
 QT += dbus
 
-SOURCES += src/fpdclient.cpp \
+SOURCES += \
+    src/fpdclient.cpp \
     src/fpdinterface.cpp
 
 HEADERS += \

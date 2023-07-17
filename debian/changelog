@@ -1,9 +1,17 @@
-droidian-fpd-client (8+git20230709005351.7ac6aba.release) trixie; urgency=medium
+droidian-fpd-client (8+git20230711020047.7829947.release) trixie; urgency=medium
 
   * fpdunlocker: add haptic feedback for good and bad fingerprints
   * move everything from usr/bin to usr/libexec/fpd
+  * add pam support for fpd
+  * debian: add libpam0g-dev to build deps
+  * debian: install droidian-fpd-client in usr/bin and the rest in usr/libexec
+  * fpd: only vibrate on failure if the passed error code is FINGER_NOT_RECOGNIZED
+  * fpidentify: save the state in a variable according to fpd-unlocker exit code
+  * unlocker: react to fingerprint if screen is on
+  * fpidentify: use read to sleep without generating any pids
+  * add an example program for pam usage
 
- -- Bardia Moshiri <fakeshell@bardia.tech>  Sun, 09 Jul 2023 00:53:51 -0400
+ -- Bardia Moshiri <fakeshell@bardia.tech>  Tue, 11 Jul 2023 02:00:47 -0400
 
 droidian-fpd-client (8) trixie; urgency=medium
 

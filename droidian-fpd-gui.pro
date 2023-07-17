@@ -1,10 +1,10 @@
 TARGET = droidian-fpd-gui
 
 QT += dbus
-
 QT += quick
 
-SOURCES += src/fpdgui.cpp \
+SOURCES += \
+    src/fpdgui.cpp \
     src/fpdinterface.cpp \
     src/fpdinterfaceqmladapter.cpp
 

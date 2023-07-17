@@ -32,6 +32,7 @@ do
                 if [ $? != 0 ]; then
                    delay 0.2
                 else
+                   (pgrep -f "journalctl -q -f --since" | xargs kill) || true
                    UNLOCKED=true
                 fi
             done

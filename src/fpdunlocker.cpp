@@ -5,7 +5,9 @@
 #include <QTextStream>
 #include <QDebug>
 #include <QProcess>
+#include <QThread>
 #include "fpdinterface.h"
+#include "journallistener.h"
 
 int main(int argc, char *argv[])
 {
@@ -21,6 +23,18 @@ int main(int argc, char *argv[])
     QString sessionId = args[1];
 
     FPDInterface fpdInterface;
+    JournalctlListener* listener = new JournalctlListener();
+    QThread* listenerThread = new QThread();
+
+    listener->moveToThread(listenerThread);
+
+    QObject::connect(listenerThread, &QThread::started, listener, &JournalctlListener::runCommand);
+    QObject::connect(listener, &JournalctlListener::commandFinished, [&]() {
+        listenerThread->quit();
+        listenerThread->wait();
+        delete listener;
+        QCoreApplication::exit(0);
+    });
 
     QObject::connect(&fpdInterface, &FPDInterface::identified, [sessionId](const QString &finger) {
         qDebug() << "Identified finger:" << finger;
@@ -62,13 +76,16 @@ int main(int argc, char *argv[])
             QString vibra_bad = "for i in {0..2}; do fbcli -E button-pressed; done";
             process->start("bash", QStringList() << "-c" << vibra_bad);
 
-           QCoreApplication::exit(1);
+            QCoreApplication::exit(1);
+        } else if (info.contains("ERROR_CANCELED") && batmanOutput.trimmed() != "no") {
+            QCoreApplication::exit(1);
         } else {
-           QCoreApplication::exit(0);
+            QCoreApplication::exit(0);
         }
     });
 
     qDebug() << "Waiting for finger identification...";
+    listenerThread->start();
     fpdInterface.identify();
 
     return app.exec();
