@@ -12,9 +12,9 @@ void printHelp() {
     qDebug() << "enroll <finger>: Start the enrollment process for the specified finger";
     qDebug() << "identify: Start the identification process";
     qDebug() << "remove <finger>: Remove the specified finger";
-    qDebug() << "clear: Clear all fingerprints";
-    qDebug() << "list: List all enrolled fingers";
-    qDebug() << "help: Display this help message";
+    qDebug() << "clear/cls: Clear all fingerprints";
+    qDebug() << "list/ls: List all enrolled fingers";
+    qDebug() << "help/-h/--help: Display this help message";
 }
 
 void handleInput(FPDInterface &fpdInterface, const QString &input)
@@ -26,16 +26,16 @@ void handleInput(FPDInterface &fpdInterface, const QString &input)
     } else if (input == "identify") {
         qDebug() << "Identifying...";
         fpdInterface.identify();
-    } else if (input.startsWith("remove ")) {
+    } else if (input.startsWith("remove ") || input.startsWith("rm ")) {
         QString finger = input.section(' ', 1).trimmed();
         qDebug() << "Removing finger:" << finger;
         fpdInterface.remove(finger);
-    } else if (input == "clear") {
-        qDebug() << "Clearing...";
+    } else if (input == "clear" || input == "cls") {
+        qDebug() << "All fingerprints have been cleared.";
         fpdInterface.clear();
-    } else if (input == "help") {
+    } else if (input == "help" || input == "-h" || input == "--help") {
         printHelp();
-    } else if (input == "list") {
+    } else if (input == "list" || input == "ls") {
         QStringList fingers = fpdInterface.fingerprints();
         if (fingers.isEmpty())
             qDebug() << "No enrolled fingers.";
@@ -120,11 +120,10 @@ int main(int argc, char *argv[])
                 break;
             }
         }
-    }
-    else if (argc >= 2) {
+    } else if (argc >= 2) {
         QString command(argv[1]);
 
-        if (command == "list") {
+        if (command == "list" || command == "ls") {
             QStringList fingers = fpdInterface.fingerprints();
             if (fingers.isEmpty()) {
                 return 1;
@@ -132,8 +131,7 @@ int main(int argc, char *argv[])
                 qDebug().noquote() << fingers.join(", ");
                 return 0;
             }
-        }
-        else if (command == "enroll" && argc == 3) {
+        } else if (command == "enroll" && argc == 3) {
             QString finger(argv[2]);
             if (fpdInterface.fingerprints().contains(finger)) {
                 qDebug() << "Fingerprint already enrolled:" << finger;
@@ -153,8 +151,7 @@ int main(int argc, char *argv[])
             fpdInterface.enroll(finger);
 
             return app.exec();
-        }
-        else if (command == "remove" && argc == 3) {
+        } else if ((command == "remove" || command == "rm") && argc == 3) {
             QString finger(argv[2]);
             if (fpdInterface.fingerprints().contains(finger)) {
                 fpdInterface.remove(finger);
@@ -162,9 +159,26 @@ int main(int argc, char *argv[])
             } else {
                 return 1;
             }
-        }
-        else {
+        } else if (command == "identify" && argc == 2) {
+            QObject::connect(&fpdInterface, &FPDInterface::identified,
+                [&app](const QString &finger) {
+                    qDebug() << "Identified finger:" << finger;
+                    app.quit();
+                }
+            );
+
+            fpdInterface.identify();
+
+            return app.exec();
+        } else if ((command == "clear" || command == "cls") && argc == 2) {
+            fpdInterface.clear();
+            return 0;
+        } else if (command == "help" || command == "-h" || command == "--help") {
+            printHelp();
+            return 0;
+        } else {
             qDebug() << "Unknown command or wrong number of arguments";
+            printHelp();
             return 1;
         }
     }
