@@ -162,7 +162,7 @@ int main(int argc, char *argv[])
         } else if (command == "identify" && argc == 2) {
             QObject::connect(&fpdInterface, &FPDInterface::identified,
                 [&app](const QString &finger) {
-                    qDebug() << "Identified finger:" << finger;
+                    qDebug() << finger;
                     app.quit();
                 }
             );
