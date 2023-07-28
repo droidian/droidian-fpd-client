@@ -32,7 +32,9 @@ do
                 if [ $? != 0 ]; then
                    delay 0.2
                 else
-                   (pgrep -f "journalctl -q -f --since" | xargs kill) || true
+                   if [ -f /usr/lib/droidian/device/fpd-gkr-unlock ]; then
+                       (pgrep -f "journalctl -q -f --since" | xargs kill) || true
+                   fi
                    UNLOCKED=true
                 fi
             done

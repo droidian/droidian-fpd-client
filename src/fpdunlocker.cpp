@@ -6,6 +6,7 @@
 #include <QDebug>
 #include <QProcess>
 #include <QThread>
+#include <QFile>
 #include "fpdinterface.h"
 #include "journallistener.h"
 
@@ -85,7 +86,11 @@ int main(int argc, char *argv[])
     });
 
     qDebug() << "Waiting for finger identification...";
-    listenerThread->start();
+
+    if (QFile::exists("/usr/lib/droidian/device/fpd-gkr-unlock")) {
+        listenerThread->start();
+    }
+
     fpdInterface.identify();
 
     return app.exec();
