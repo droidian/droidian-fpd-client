@@ -27,6 +27,8 @@ override_dh_auto_configure:
 
 	$(MAKE) clean
 
+	gcc src/fpidentify.c -lbatman-wrappers -o fpidentify
+
 	gcc -fPIC -shared -o pam_fpd.so pam/pam_fpd.c
 
 override_dh_install:
