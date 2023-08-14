@@ -10,3 +10,5 @@ SOURCES += \
 HEADERS += \
     src/fpdinterface.h \
     src/journallistener.h
+
+LIBS += -lbatman-wrappers

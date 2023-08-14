@@ -9,6 +9,12 @@
 #include <QFile>
 #include "fpdinterface.h"
 #include "journallistener.h"
+#include <batman/wlrdisplay.h>
+
+int wlrdisplay_status() {
+    int result = wlrdisplay(0, NULL);
+    return result != 0;
+}
 
 int main(int argc, char *argv[])
 {
@@ -40,13 +46,7 @@ int main(int argc, char *argv[])
     QObject::connect(&fpdInterface, &FPDInterface::identified, [sessionId](const QString &finger) {
         qDebug() << "Identified finger:" << finger;
 
-        QProcess checkScreen;
-        checkScreen.start("batman-helper", QStringList() << "wlrdisplay");
-        checkScreen.waitForFinished();
-
-        QString batmanOutput(checkScreen.readAllStandardOutput());
-
-        if (batmanOutput.trimmed() == "yes") {
+        if (wlrdisplay_status() == 0) {
             QProcess *process = new QProcess();
             QString vibra_good = "fbcli -E bell-terminal";
             QString unlock = "loginctl unlock-session " + sessionId;
@@ -66,19 +66,13 @@ int main(int argc, char *argv[])
     QObject::connect(&fpdInterface, &FPDInterface::errorInfo, [](const QString &info) {
         qDebug() << "Error info:" << info;
 
-        QProcess checkScreen;
-        checkScreen.start("batman-helper", QStringList() << "wlrdisplay");
-        checkScreen.waitForFinished();
-
-        QString batmanOutput(checkScreen.readAllStandardOutput());
-
-        if (info.contains("FINGER_NOT_RECOGNIZED") && batmanOutput.trimmed() == "yes") {
+        if (info.contains("FINGER_NOT_RECOGNIZED") && wlrdisplay_status() == 0) {
             QProcess *process = new QProcess();
             QString vibra_bad = "for i in {0..2}; do fbcli -E button-pressed; done";
             process->start("bash", QStringList() << "-c" << vibra_bad);
 
             QCoreApplication::exit(1);
-        } else if (info.contains("ERROR_CANCELED") && batmanOutput.trimmed() != "no") {
+        } else if (info.contains("ERROR_CANCELED") && wlrdisplay_status() != 0) {
             QCoreApplication::exit(1);
         } else {
             QCoreApplication::exit(0);

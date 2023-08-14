@@ -9,9 +9,11 @@ Build-Depends: debhelper-compat (= 13),
                qtchooser,
                qtbase5-dev-tools,
                qt5-qmake,
-               g++,                                  
+               g++,
                libc6-dev,
                libpam0g-dev,
+               batman-dev,
+               libbatman-wrappers
 
 Package: droidian-fpd-client
 Architecture: any
@@ -20,12 +22,14 @@ Depends: ${shlibs:Depends}, ${misc:Depends},
          libqt5dbus5,
          libqt5qml5,
          libqt5dbus5,
+         libbatman-wrappers,
 Description: Droidian fingerprint client
   Droidian fingerprint enrollment and client.
 
 Package: droidian-fpd-gui
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends},
+         droidian-fpd-client,
          libqt5core5a,
          libqt5gui5 | libqt5gui5-gles,
          libqt5dbus5,
@@ -35,5 +39,6 @@ Depends: ${shlibs:Depends}, ${misc:Depends},
          libqt5quickcontrols2-5,
          qml-module-qtquick-controls,
          qml-module-qtquick-controls2,
+         libbatman-wrappers,
 Description: Droidian fingerprint gui
   Droidian fingerprint gui
