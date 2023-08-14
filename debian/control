@@ -13,6 +13,8 @@ Build-Depends: debhelper-compat (= 13),
                libc6-dev,
                libpam0g-dev,
                batman-dev,
+               libwayland-dev,
+               libupower-glib-dev,
                libbatman-wrappers
 
 Package: droidian-fpd-client
