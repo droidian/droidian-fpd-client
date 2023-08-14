@@ -13,28 +13,14 @@ override_dh_auto_configure:
 		$(MAKE) clean; \
 	fi
 
-	qmake droidian-fpd-client.pro
+	cmake .
+
 	$(MAKE)
-
-	qmake droidian-fpd-unlocker.pro
-	$(MAKE)
-
-	qmake droidian-fpd-gui.pro
-	$(MAKE)
-
-	qmake droidian-fpd-identify.pro
-	$(MAKE)
-
-	$(MAKE) clean
-
-	gcc src/fpidentify.c -lbatman-wrappers -o fpidentify
-
-	gcc -fPIC -shared -o pam_fpd.so pam/pam_fpd.c
 
 override_dh_install:
 	dh_install
 	mkdir -p debian/droidian-fpd-client/usr/lib/$(DEB_HOST_MULTIARCH)/security
-	cp pam_fpd.so debian/droidian-fpd-client/usr/lib/$(DEB_HOST_MULTIARCH)/security
+	cp libpam_fpd.so debian/droidian-fpd-client/usr/lib/$(DEB_HOST_MULTIARCH)/security/pam_fpd.so
 
 override_dh_auto_test:
 override_dh_dwz:
