@@ -1,5 +1,5 @@
 [Unit]
-Description=Droidian fingerprint unlocker client
+Description=Droidian fingerprint listener
 After=sm.puri.Phosh.service
 StartLimitBurst=5000
 StartLimitIntervalSec=0
@@ -7,4 +7,4 @@ StartLimitIntervalSec=0
 [Service]
 Type=simple
 Restart=always
-ExecStart=/usr/bin/fpidentify
+ExecStart=/usr/bin/fpdlistener

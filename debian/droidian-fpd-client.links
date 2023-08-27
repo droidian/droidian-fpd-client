@@ -1,1 +1,1 @@
-/usr/lib/systemd/user/droidian-fpd-unlocker.service /usr/lib/systemd/user/gnome-session.target.wants/droidian-fpd-unlocker.service
+/usr/lib/systemd/user/fpdlistener.service /usr/lib/systemd/user/gnome-session.target.wants/fpdlistener.service
