@@ -1,3 +1,9 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2023 Droidian Project
+//
+// Authors:
+// Bardia Moshiri <fakeshell@bardia.tech>
+
 #ifndef JOURNALCTLLISTENER_H
 #define JOURNALCTLLISTENER_H
 

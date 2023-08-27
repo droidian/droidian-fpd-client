@@ -1,3 +1,9 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2023 Droidian Project
+//
+// Authors:
+// Bardia Moshiri <fakeshell@bardia.tech>
+
 #include <security/pam_appl.h>
 #include <security/pam_misc.h>
 #include <stdio.h>
