@@ -94,12 +94,12 @@ extern "C" void fpdrunner(const char *sessionId) {
                     if (exitStatus == 0) {
                         unlocked = 1;
                     } else {
-                        delay(0.1);
+                        delay(0.5);
                     }
                 }
             }
         } else {
-            delay(0.1);
+            delay(0.2);
         }
     }
 }
