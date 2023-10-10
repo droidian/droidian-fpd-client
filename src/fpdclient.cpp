@@ -8,9 +8,10 @@
 #include <QTextStream>
 #include <QDebug>
 #include <QTimer>
+#include <cstdlib>
 #include "fpdinterface.h"
 
-void printHelp() {
+void printHelp(bool isInteractive) {
     qDebug() << "Available commands:";
     qDebug() << "enroll <finger>: Start the enrollment process for the specified finger";
     qDebug() << "identify: Start the identification process";
@@ -18,6 +19,8 @@ void printHelp() {
     qDebug() << "clear/cls: Clear all fingerprints";
     qDebug() << "list/ls: List all enrolled fingers";
     qDebug() << "help/-h/--help: Display this help message";
+    if (isInteractive)
+        qDebug() << "exit/q/quit: Exit the program";
 }
 
 void handleInput(FPDInterface &fpdInterface, const QString &input)
@@ -37,13 +40,16 @@ void handleInput(FPDInterface &fpdInterface, const QString &input)
         qDebug() << "All fingerprints have been cleared.";
         fpdInterface.clear();
     } else if (input == "help" || input == "-h" || input == "--help") {
-        printHelp();
+        printHelp(true);
     } else if (input == "list" || input == "ls") {
         QStringList fingers = fpdInterface.fingerprints();
         if (fingers.isEmpty())
             qDebug() << "No enrolled fingers.";
         else
             qDebug() << "Enrolled fingers: " << fingers.join(", ");
+    } else if (input == "exit" || input == "q" || input == "quit") {
+        qDebug() << "Exiting.";
+        exit(0);
     } else {
         qDebug() << "Unknown command:" << input;
     }
@@ -56,7 +62,7 @@ int main(int argc, char *argv[])
     FPDInterface fpdInterface;
 
     if (argc == 1) {
-        printHelp();
+        printHelp(true);
 
         QStringList fingers = fpdInterface.fingerprints();
         if (fingers.isEmpty())
@@ -177,11 +183,11 @@ int main(int argc, char *argv[])
             fpdInterface.clear();
             return 0;
         } else if (command == "help" || command == "-h" || command == "--help") {
-            printHelp();
+            printHelp(false);
             return 0;
         } else {
             qDebug() << "Unknown command or wrong number of arguments";
-            printHelp();
+            printHelp(false);
             return 1;
         }
     }
