@@ -25,6 +25,7 @@ int main(int argc, char *argv[])
 
         QObject::connect(process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
             [&](int exitCode, QProcess::ExitStatus exitStatus) {
+                process->deleteLater(); // Schedule the process for deletion
                 QCoreApplication::exit(exitCode);
             });
     });
@@ -36,6 +37,11 @@ int main(int argc, char *argv[])
             QProcess *process = new QProcess();
             QString vibra_bad = "for i in {0..2}; do fbcli -E button-pressed; done";
             process->start("bash", QStringList() << "-c" << vibra_bad);
+
+            QObject::connect(process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
+                [process](int, QProcess::ExitStatus) {
+                    process->deleteLater(); // Schedule the process for deletion
+                });
         }
 
         QCoreApplication::exit(1);

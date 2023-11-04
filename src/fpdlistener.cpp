@@ -45,6 +45,7 @@ void fpdunlocker(const QString& sessionId, int &exitStatus) {
             QObject::connect(process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
                 [&](int exitCode, QProcess::ExitStatus) {
                     exitStatus = exitCode;
+                    process->deleteLater(); // Schedule the process for deletion
                 });
         } else {
             exitStatus = 0;
@@ -60,6 +61,13 @@ void fpdunlocker(const QString& sessionId, int &exitStatus) {
             QProcess *process = new QProcess();
             QString vibraBad = "for i in {0..2}; do fbcli -E button-pressed; done";
             process->start("bash", QStringList() << "-c" << vibraBad);
+
+            // delete the process when we're done, if we don't it will cause memory leak
+            QObject::connect(process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
+                [process](int, QProcess::ExitStatus) {
+                    process->deleteLater(); // Schedule the process for deletion
+                });
+
             exitStatus = 1;
         } else if (info.contains("ERROR_CANCELED") && wlrdisplay_status() != 0) {
             exitStatus = 1;
