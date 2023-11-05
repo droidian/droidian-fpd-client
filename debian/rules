@@ -2,3 +2,7 @@
 
 %:
 	dh $@
+
+override_dh_install:
+	mv debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/security/libpam_fpd.so debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/security/pam_fpd.so
+	dh_install
