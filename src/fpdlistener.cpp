@@ -118,23 +118,28 @@ int main(int argc, char *argv[]) {
     system("/usr/bin/binder-wait android.hardware.biometrics.fingerprint@2.1::IBiometricsFingerprint/default");
 
     char sessionId[64] = {0};
+    FILE *fp = NULL;
 
     while (1) {
-        FILE *fp = popen("loginctl list-sessions | awk '/tty7/{print $1}'", "r");
-        if (fp) {
-            fgets(sessionId, sizeof(sessionId), fp);
+        fp = popen("loginctl list-sessions | awk '/tty7/{print $1}'", "r");
+        if (fp == NULL) {
+            qWarning() << "Failed to run command using popen.";
+            delay(1);
+            continue;
+        }
+
+        if (fgets(sessionId, sizeof(sessionId), fp) != NULL) {
             pclose(fp);
-        }
-
-        if (strlen(sessionId) > 0) {
             break;
+        } else {
+            qWarning() << "Failed to read output";
+            pclose(fp);
+            delay(1);
         }
-
-        delay(0.3);
     }
 
-    QThread *mainLoopThread = new QThread();
-    QObject::connect(mainLoopThread, &QThread::started, [=](){ fpdrunner(sessionId); });
+    QThread *mainLoopThread = QThread::create([=](){ fpdrunner(sessionId); });
+    QObject::connect(mainLoopThread, &QThread::finished, mainLoopThread, &QThread::deleteLater);
 
     mainLoopThread->start();
 
