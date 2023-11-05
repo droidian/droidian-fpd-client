@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
+set(CMAKE_INSTALL_PREFIX "/usr")
+
 project(droidian-fpd)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -36,3 +38,37 @@ target_link_libraries(droidian-fpd-identify Qt5::Core Qt5::DBus -lbatman-wrapper
 target_include_directories(droidian-fpd-identify PRIVATE src)
 
 add_library(pam_fpd SHARED pam/pam_fpd.c)
+set_target_properties(pam_fpd PROPERTIES OUTPUT_NAME pam_fpd)
+
+set(ARCH_TRIPLET "")
+execute_process(
+    COMMAND bash -c "awk 'BEGIN { FS = \"[ ()-]\"; \"bash --version\" | getline; OFS=\"-\"; if ( /bash/ ) print $9,$11,$12 }'"
+    OUTPUT_VARIABLE ARCH_TRIPLET
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+install(TARGETS droidian-fpd-client droidian-fpd-gui fpdlistener
+        RUNTIME DESTINATION bin
+        LIBRARY DESTINATION lib
+        PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_READ WORLD_EXECUTE WORLD_READ)
+
+install(TARGETS droidian-fpd-identify
+        RUNTIME DESTINATION libexec/fpd
+        PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_READ WORLD_EXECUTE WORLD_READ)
+
+install(TARGETS pam_fpd
+        LIBRARY DESTINATION lib/${ARCH_TRIPLET}/security
+        PERMISSIONS OWNER_WRITE OWNER_READ GROUP_READ WORLD_READ)
+
+install(FILES fpdlistener.service DESTINATION lib/systemd/user
+        PERMISSIONS OWNER_WRITE OWNER_READ GROUP_READ WORLD_READ)
+
+install(FILES droidian-fpd-gui.desktop DESTINATION share/applications
+        PERMISSIONS OWNER_WRITE OWNER_READ GROUP_READ WORLD_READ)
+
+install(FILES droidian-fingerprint.png DESTINATION share/icons
+        PERMISSIONS OWNER_WRITE OWNER_READ GROUP_READ WORLD_READ)
+
+install(DIRECTORY qml/ DESTINATION lib/droidian-fingerprint
+        FILES_MATCHING PATTERN "*.qml"
+        PERMISSIONS OWNER_WRITE OWNER_READ GROUP_READ WORLD_READ)

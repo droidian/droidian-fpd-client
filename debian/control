@@ -15,7 +15,8 @@ Build-Depends: debhelper-compat (= 13),
                batman-dev,
                libwayland-dev,
                libupower-glib-dev,
-               libbatman-wrappers
+               libbatman-wrappers,
+               bash
 
 Package: droidian-fpd-client
 Architecture: any

@@ -1,4 +1,4 @@
-fpdlistener usr/bin
-droidian-fpd-client usr/bin
-droidian-fpd-identify usr/libexec/fpd
-fpdlistener.service usr/lib/systemd/user
+/usr/bin/fpdlistener
+/usr/bin/droidian-fpd-client
+/usr/libexec/fpd/droidian-fpd-identify
+/usr/lib/systemd/user/fpdlistener.service

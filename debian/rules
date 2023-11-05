@@ -2,25 +2,3 @@
 
 %:
 	dh $@
-
-override_dh_auto_clean:
-	if [ -f Makefile ]; then \
-		make clean; \
-	fi
-
-override_dh_auto_configure:
-	if [ -f Makefile ]; then \
-		$(MAKE) clean; \
-	fi
-
-	cmake .
-
-	$(MAKE)
-
-override_dh_install:
-	dh_install
-	mkdir -p debian/droidian-fpd-client/usr/lib/$(DEB_HOST_MULTIARCH)/security
-	cp libpam_fpd.so debian/droidian-fpd-client/usr/lib/$(DEB_HOST_MULTIARCH)/security/pam_fpd.so
-
-override_dh_auto_test:
-override_dh_dwz:
