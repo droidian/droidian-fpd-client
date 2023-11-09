@@ -45,7 +45,7 @@ void fpdunlocker(const QString& sessionId, int &exitStatus) {
             QObject::connect(process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
                 [&](int exitCode, QProcess::ExitStatus) {
                     exitStatus = exitCode;
-                    process->deleteLater(); // Schedule the process for deletion
+                    // process->deleteLater(); // Schedule the process for deletion
                 });
         } else {
             exitStatus = 0;
