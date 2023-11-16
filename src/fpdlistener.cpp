@@ -15,6 +15,8 @@
 #include <QDebug>
 #include <QProcess>
 #include <QThread>
+#include <QDir>
+#include <QStandardPaths>
 #include <QFile>
 #include "fpdinterface.h"
 
@@ -27,6 +29,61 @@ extern "C" int delay(double seconds) {
     return usleep(seconds * 1000000);
 }
 
+QString getConfigFile() {
+    QFileInfo primaryConfig("/etc/droidian-fpd-client.conf");
+    QFileInfo secodaryConfig("/usr/share/droidian-fpd-client/droidian-fpd-client.conf");
+
+    if (primaryConfig.exists()) {
+        return primaryConfig.absoluteFilePath();
+    } else if (secodaryConfig.exists()) {
+        return secodaryConfig.absoluteFilePath();
+    } else {
+        return "None";
+    }
+}
+
+QString getVibrationLevel(bool connect) {
+    int vibration_level_selected = 1; // default is 1
+    QString configFilePath = getConfigFile();
+    QString vibraCommand = "";
+    // qDebug() << "config file path: " << configFilePath;
+    QFile configFile(configFilePath);
+
+    if(configFile.open(QIODevice::ReadOnly)) {
+        QTextStream in(&configFile);
+        QString line;
+
+        while (in.readLineInto(&line)) {
+            if (line.startsWith("vibration_level=")) {
+                int vibrationLevel = (line.split("=")[1].trimmed()).toInt();
+                // qDebug() << vibrationLevel;
+                if (vibrationLevel == 0) {
+                    vibration_level_selected = -1;
+                    // return empty string for no vibration
+                    // qDebug() << "vibration off";
+                } else {
+                    // qDebug() << vibrationLevel;
+                    vibration_level_selected = vibrationLevel - 1;
+                }
+
+                break;
+            }
+        }
+    }
+
+    if (connect && vibration_level_selected != -1) {
+        // good finger
+        vibraCommand = QStringLiteral("for i in {0..%1}; do fbcli -E button-released; done").arg(vibration_level_selected);
+    } else if (!connect && vibration_level_selected != -1) {
+        // bad finger
+        vibraCommand = QStringLiteral("for i in {0..%1}; do fbcli -E window-close; done").arg(vibration_level_selected);
+    }
+
+    // qDebug() << vibraCommand;
+    return vibraCommand;
+}
+
+
 void fpdunlocker(const QString& sessionId, int &exitStatus) {
     FPDInterface fpdInterface;
     QEventLoop loop;
@@ -37,15 +94,21 @@ void fpdunlocker(const QString& sessionId, int &exitStatus) {
 
         if (wlrdisplay_status() == 0) {
             QProcess *process = new QProcess();
-            QString vibraGood = "fbcli -E bell-terminal";
+
+            QString vibraGood = getVibrationLevel(true);
             QString unlock = "loginctl unlock-session " + sessionId;
-            QString command = vibraGood + " && " + unlock;
+            QString command =  unlock;
+
+            if(!vibraGood.isEmpty()){
+                command =  vibraGood + " && " + command ;
+            }
+
             process->start("bash", QStringList() << "-c" << command);
 
             QObject::connect(process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
                 [&](int exitCode, QProcess::ExitStatus) {
                     exitStatus = exitCode;
-                    // process->deleteLater(); // Schedule the process for deletion
+                    process->deleteLater(); // Schedule the process for deletion
                 });
         } else {
             exitStatus = 0;
@@ -59,8 +122,10 @@ void fpdunlocker(const QString& sessionId, int &exitStatus) {
 
         if (info.contains("FINGER_NOT_RECOGNIZED") && wlrdisplay_status() == 0) {
             QProcess *process = new QProcess();
-            QString vibraBad = "for i in {0..2}; do fbcli -E button-pressed; done";
-            process->start("bash", QStringList() << "-c" << vibraBad);
+            QString vibraBad = getVibrationLevel(false);
+            if(!(vibraBad.isEmpty())){
+                process->start("bash", QStringList() << "-c" << vibraBad);
+            }
 
             // delete the process when we're done, if we don't it will cause memory leak
             QObject::connect(process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
