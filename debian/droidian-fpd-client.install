@@ -2,3 +2,4 @@
 /usr/bin/droidian-fpd-client
 /usr/libexec/fpd/droidian-fpd-identify
 /usr/lib/systemd/user/fpdlistener.service
+/usr/share/droidian-fpd-client/droidian-fpd-client.conf
