@@ -17,6 +17,7 @@
 #include <QThread>
 #include <QDir>
 #include <QStandardPaths>
+#include <QSharedPointer>
 #include <QFile>
 #include "fpdinterface.h"
 
@@ -83,7 +84,6 @@ QString getVibrationLevel(bool connect) {
     return vibraCommand;
 }
 
-
 void fpdunlocker(const QString& sessionId, int &exitStatus) {
     FPDInterface fpdInterface;
     QEventLoop loop;
@@ -93,23 +93,25 @@ void fpdunlocker(const QString& sessionId, int &exitStatus) {
         qDebug() << "Identified finger: " << finger;
 
         if (wlrdisplay_status() == 0) {
-            QProcess *process = new QProcess();
+            QSharedPointer<QProcess> process(new QProcess());
 
             QString vibraGood = getVibrationLevel(true);
             QString unlock = "loginctl unlock-session " + sessionId;
-            QString command =  unlock;
+            QString command = unlock;
 
-            if(!vibraGood.isEmpty()){
-                command =  vibraGood + " && " + command ;
+            if(!vibraGood.isEmpty()) {
+                command = vibraGood + " && " + command;
             }
 
             process->start("bash", QStringList() << "-c" << command);
 
-            QObject::connect(process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
-                [&](int exitCode, QProcess::ExitStatus) {
+            QObject::connect(process.data(), QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
+                [process, &exitStatus](int exitCode, QProcess::ExitStatus) {
                     exitStatus = exitCode;
-                    process->deleteLater(); // Schedule the process for deletion
                 });
+
+            // Wait for the process to finish
+            process->waitForFinished();
         } else {
             exitStatus = 0;
         }
@@ -121,17 +123,14 @@ void fpdunlocker(const QString& sessionId, int &exitStatus) {
         qDebug() << "Error info:" << info;
 
         if (info.contains("FINGER_NOT_RECOGNIZED") && wlrdisplay_status() == 0) {
-            QProcess *process = new QProcess();
+            QSharedPointer<QProcess> process(new QProcess());
             QString vibraBad = getVibrationLevel(false);
-            if(!(vibraBad.isEmpty())){
+            if(!vibraBad.isEmpty()) {
                 process->start("bash", QStringList() << "-c" << vibraBad);
-            }
 
-            // delete the process when we're done, if we don't it will cause memory leak
-            QObject::connect(process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
-                [process](int, QProcess::ExitStatus) {
-                    process->deleteLater(); // Schedule the process for deletion
-                });
+                // Wait for the process to finish
+                process->waitForFinished();
+            }
 
             exitStatus = 1;
         } else if (info.contains("ERROR_CANCELED") && wlrdisplay_status() != 0) {
