@@ -29,10 +29,6 @@ add_executable(droidian-fpd-gui ${COMMON_SOURCES} ${FPDGUI_SOURCES})
 target_link_libraries(droidian-fpd-gui Qt5::Core Qt5::DBus Qt5::Quick)
 target_include_directories(droidian-fpd-gui PRIVATE src)
 
-add_executable(fpdlistener ${COMMON_SOURCES} src/fpdlistener.cpp)
-target_link_libraries(fpdlistener Qt5::Core Qt5::DBus -lbatman-wrappers)
-target_include_directories(fpdlistener PRIVATE src)
-
 add_executable(droidian-fpd-identify ${COMMON_SOURCES} src/fpdidentify.cpp)
 target_link_libraries(droidian-fpd-identify Qt5::Core Qt5::DBus -lbatman-wrappers)
 target_include_directories(droidian-fpd-identify PRIVATE src)
@@ -47,7 +43,7 @@ execute_process(
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
-install(TARGETS droidian-fpd-client droidian-fpd-gui fpdlistener
+install(TARGETS droidian-fpd-client droidian-fpd-gui
         RUNTIME DESTINATION bin
         LIBRARY DESTINATION lib
         PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_READ WORLD_EXECUTE WORLD_READ)
@@ -58,9 +54,6 @@ install(TARGETS droidian-fpd-identify
 
 install(TARGETS pam_fpd
         LIBRARY DESTINATION lib/${ARCH_TRIPLET}/security
-        PERMISSIONS OWNER_WRITE OWNER_READ GROUP_READ WORLD_READ)
-
-install(FILES fpdlistener.service DESTINATION lib/systemd/user
         PERMISSIONS OWNER_WRITE OWNER_READ GROUP_READ WORLD_READ)
 
 install(FILES droidian-fpd-client.conf DESTINATION share/droidian-fpd-client
